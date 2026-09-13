@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="220" height="60" viewBox="0 0 220 60" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Purayidakrishi">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#56ab2f"/>
+      <stop offset="100%" stop-color="#2d5016"/>
+    </linearGradient>
+  </defs>
+  <g>
+    <path d="M30 50c-8 0-14-6-14-14s6-14 14-14c3 0 6 1 8 3l6-6c-4-4-9-6-14-6C15 13 6 22 6 36s9 23 24 23c9 0 16-3 21-9l-6-5c-4 5-9 7-15 7Z" fill="url(#g)"/>
+    <path d="M34 13c2 6 0 18-8 26" stroke="#8bc34a" stroke-width="3" stroke-linecap="round"/>
+    <text x="65" y="36" font-family="Inter, Segoe UI, Arial" font-size="22" font-weight="700" fill="#2d5016">Purayidakrishi</text>
+    <text x="65" y="52" font-family="Inter, Segoe UI, Arial" font-size="12" fill="#8b6231">Homestead Agroecology</text>
+  </g>
+</svg>

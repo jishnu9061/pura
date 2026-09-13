@@ -1,0 +1,19 @@
+{
+  "files": {
+    "main.css": "/static/css/main.25ec4f16.css",
+    "main.js": "/static/js/main.81166487.js",
+    "static/js/453.a0228d65.chunk.js": "/static/js/453.a0228d65.chunk.js",
+    "static/media/agrobg.jpg": "/static/media/agrobg.a758e0812609f4faccac.jpg",
+    "static/media/purayida-krishi-logo-file.png": "/static/media/purayida-krishi-logo-file.1e585571215752a12c41.png",
+    "static/media/purayida-krishi-logo-malayalam.png": "/static/media/purayida-krishi-logo-malayalam.f239d23ea61e2b8c7b71.png",
+    "static/media/purayida-krishi-logo-eng.png": "/static/media/purayida-krishi-logo-eng.3e6f13c38cdc465b7367.png",
+    "index.html": "/index.html",
+    "main.25ec4f16.css.map": "/static/css/main.25ec4f16.css.map",
+    "main.81166487.js.map": "/static/js/main.81166487.js.map",
+    "453.a0228d65.chunk.js.map": "/static/js/453.a0228d65.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.25ec4f16.css",
+    "static/js/main.81166487.js"
+  ]
+}

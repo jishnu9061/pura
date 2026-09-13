@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Post" ADD COLUMN "adBlogPostId" INTEGER;
+ALTER TABLE "Post" ADD COLUMN "adZone" TEXT;
