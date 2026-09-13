@@ -914,12 +914,13 @@ router.get('/ads/metrics', requireRole('EDITOR'), async (_req, res) => {
 });
 // Helpers
 function slugify(input) {
-    return input
+    const slug = (input || '')
         .toLowerCase()
         .normalize('NFKD')
         .replace(/[\u0300-\u036f]/g, '')
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)+/g, '');
+    return slug || 'item-' + Math.random().toString(36).substring(2, 8);
 }
 // Ensure a service translation slug is unique within a locale, excluding the current service ID.
 async function ensureUniqueServiceSlug(desired, locale, serviceId) {

@@ -1,13 +1,18 @@
 import 'dotenv/config';
 import bcrypt from 'bcryptjs';
 import { prisma } from '../prisma.js';
-function slugify(input) {
-    return input
+function slugify(input, fallbackInput) {
+    const slug = (input || '')
         .toLowerCase()
         .normalize('NFKD')
         .replace(/[\u0300-\u036f]/g, '')
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)+/g, '');
+    if (slug)
+        return slug;
+    if (fallbackInput && fallbackInput !== input)
+        return slugify(fallbackInput);
+    return 'item-' + Math.random().toString(36).substring(2, 8);
 }
 async function main() {
     const email = process.env.SEED_ADMIN_EMAIL || 'admin@example.com';
@@ -235,20 +240,39 @@ async function main() {
         { order: 6, link: '/home-garden-setup', en: { title: 'Home Garden Setup', description: 'Design and set up home gardens', details: 'Layout, planting plan, schedule' }, ml: { title: 'ഹോം ഗാർഡൻ ക്രമീകരണം', description: 'ഹോം ഗാർഡൻ ഡിസൈൻ & ക്രമീകരണം', details: 'ലേഔട്ട്, നടീൽ പ്ലാൻ, ഷെഡ്യൂൾ' } },
     ];
     for (const s of serviceSeeds) {
-        const existing = await prisma.service.findFirst({ where: { translations: { some: { locale: 'en', title: s.en.title } } } });
-        if (!existing) {
-            await prisma.service.create({
-                data: {
-                    link: s.link,
-                    order: s.order,
-                    translations: {
-                        create: [
-                            { locale: 'en', title: s.en.title, description: s.en.description, details: s.en.details, slug: slugify(s.en.title) },
-                            { locale: 'ml', title: s.ml.title, description: s.ml.description, details: s.ml.details, slug: slugify(s.ml.title) },
+        const enSlug = slugify(s.en.title);
+        const mlSlug = slugify(s.ml.title, s.en.title);
+        const existing = await prisma.service.findFirst({
+            where: {
+                translations: {
+                    some: {
+                        OR: [
+                            { locale: 'en', title: s.en.title },
+                            { slug: enSlug },
+                            { slug: mlSlug },
                         ],
                     },
                 },
-            });
+            },
+        });
+        if (!existing) {
+            try {
+                await prisma.service.create({
+                    data: {
+                        link: s.link,
+                        order: s.order,
+                        translations: {
+                            create: [
+                                { locale: 'en', title: s.en.title, description: s.en.description, details: s.en.details, slug: enSlug },
+                                { locale: 'ml', title: s.ml.title, description: s.ml.description, details: s.ml.details, slug: mlSlug },
+                            ],
+                        },
+                    },
+                });
+            }
+            catch (err) {
+                console.warn(`Skipping service seed '${s.en.title}' due to constraint:`, err);
+            }
         }
     }
     // Seed Gallery images

@@ -15,7 +15,7 @@ const PORT = Number(process.env.PORT || 4000);
 const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || 'http://localhost:3000';
 const ORIGINS = FRONTEND_ORIGIN.split(',').map((s) => s.trim()).filter(Boolean);
 app.use(cors({ origin: ORIGINS.length <= 1 ? ORIGINS[0] : ORIGINS }));
-app.use(helmet());
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(morgan('tiny'));
 app.use(express.json());
 // Static serving for uploads (ensure folder exists)
@@ -34,6 +34,32 @@ app.get('/health', (_req, res) => {
 app.use('/api', publicRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/admin', adminRouter);
+// Static serving for Admin frontend (purayida-admin)
+{
+    const envAdminDir = process.env.ADMIN_DIR;
+    const adminDir = envAdminDir && envAdminDir.trim() ? envAdminDir : path.resolve(process.cwd(), '../purayida-admin');
+    if (fs.existsSync(adminDir)) {
+        app.use('/admin', express.static(adminDir));
+        app.use('/assets', express.static(path.join(adminDir, 'assets')));
+        app.get(['/admin', '/admin/*'], (_req, res) => {
+            res.sendFile(path.join(adminDir, 'index.html'));
+        });
+    }
+}
+// Static serving for Web frontend (purayida-web)
+{
+    const envWebDir = process.env.WEB_DIR;
+    const webDir = envWebDir && envWebDir.trim() ? envWebDir : path.resolve(process.cwd(), '../purayida-web');
+    if (fs.existsSync(webDir)) {
+        app.use(express.static(webDir));
+        app.get('*', (req, res, next) => {
+            if (req.path.startsWith('/api') || req.path.startsWith('/uploads') || req.path.startsWith('/admin') || req.path.startsWith('/assets')) {
+                return next();
+            }
+            res.sendFile(path.join(webDir, 'index.html'));
+        });
+    }
+}
 app.listen(PORT, () => {
     console.log(`Custom CMS server running on http://localhost:${PORT}`);
 });
